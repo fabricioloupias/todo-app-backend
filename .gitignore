@@ -3,3 +3,4 @@ npm-debug.log
 /src
 .DS_Store
 /*.env
+nodemon.json
