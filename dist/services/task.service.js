@@ -12,37 +12,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const task_model_1 = require("../models/task.model");
 class TaskService {
     welcomeMessage(req, res) {
-        return res.status(200).send("Welcome to pokeAPI REST by Nya ^^");
+        return res.status(200).send("Api rest to ToDo App");
     }
     getTasks(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            let message;
             task_model_1.Task.find({}, (error, task) => {
                 if (error) {
-                    console.log(error);
+                    message = 'Error on server';
                     return res.json(error);
                 }
-                else {
-                    res.json(task);
-                }
+                return res.json(task);
             });
         });
     }
     addNewTask(req, res) {
+        let message = '';
         const newTask = new task_model_1.Task(req.body);
         newTask.save((error, task) => {
-            if (error)
-                res.send(error);
-            const message = 'Added new task';
-            res.json(message);
+            if (error) {
+                message = 'Error while trying to save';
+                return res.send(message);
+            }
+            message = 'Added new task';
+            return res.json(message);
         });
     }
     deleteTaskById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const _id = req.params.id;
+            let message = '';
             task_model_1.Task.findByIdAndDelete(_id, (error) => {
-                if (error)
-                    return res.send(error);
-                const message = 'Deleted succesfully';
+                if (error) {
+                    message = 'Error while trying to delete';
+                    return res.send(message);
+                }
+                message = 'Deleted succesfully';
                 res.send(message);
             });
         });
@@ -50,12 +55,16 @@ class TaskService {
     updateTask(req, res) {
         const taskId = req.params.id;
         const taskToUpdate = req.body;
+        let message;
         task_model_1.Task.findByIdAndUpdate(taskId, taskToUpdate, (error, task) => {
-            if (error)
-                res.send(error);
-            const message = task ? 'Updated successfully' : 'Task not found :(';
+            if (error) {
+                message = 'Error while trying to update';
+                return res.send(error);
+            }
+            message = task ? 'Updated successfully' : 'Task not found';
             res.send(message);
         });
     }
 }
 exports.TaskService = TaskService;
+TaskService.LIMIT_DOCS = 100;
