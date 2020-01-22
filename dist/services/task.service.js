@@ -32,23 +32,23 @@ class TaskService {
         newTask.save((error, task) => {
             if (error) {
                 message = 'Error while trying to save';
-                return res.send(message);
+                return res.send({ message });
             }
             message = 'Added new task';
-            return res.json(message);
+            return res.send({ message });
         });
     }
     deleteTaskById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const _id = req.params.id;
             let message = '';
-            task_model_1.Task.findByIdAndDelete(_id, (error) => {
+            task_model_1.Task.findByIdAndDelete(_id, (error, taskDeleted) => {
                 if (error) {
                     message = 'Error while trying to delete';
-                    return res.send(message);
+                    return res.send({ message });
                 }
                 message = 'Deleted succesfully';
-                res.send(message);
+                res.send({ message, taskDeleted });
             });
         });
     }
@@ -59,10 +59,10 @@ class TaskService {
         task_model_1.Task.findByIdAndUpdate(taskId, taskToUpdate, (error, task) => {
             if (error) {
                 message = 'Error while trying to update';
-                return res.send(error);
+                return res.send({ message });
             }
             message = task ? 'Updated successfully' : 'Task not found';
-            res.send(message);
+            res.send({ message });
         });
     }
 }
